@@ -1,34 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class player_run : MonoBehaviour
 {
-    public float movespeed = 5f;
-    public float jumpForce = 5f;
+    public float movespeed;
+    public float jumpForce;
     public Rigidbody2D player;
+    public bool ground;
+    public LayerMask isGround;
+    private Collider2D myColider;
+    public Animator animator;
 
     void Start()
     {
         player = GetComponent<Rigidbody2D>();
+        myColider=  GetComponent<Collider2D>();
+        animator=GetComponent<Animator>();
     }
     void Update()
     {
-        // Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0f,0f);
-        // transform.position += movement*Time.deltaTime*movespeed;
-        var movement = Input.GetAxis("Horizontal");
-        transform.position += new Vector3(movement,0,0)*Time.deltaTime*movespeed;
-
-        // if(!Mathf.Approximately(0,movement))
-        // {
-        //     transform.rotation = movement > 0 ? Quaternion.Euler(0,180,0) : Quaternion.identity;
-        // }
-
-        if(Input.GetButtonDown("Jump")&& Mathf.Abs(player.velocity.y)<0.001f)
-        {
-            player.AddForce(new Vector2(0,jumpForce),ForceMode2D.Impulse);
+        ground = Physics2D.IsTouchingLayers(myColider,isGround);
+        player.velocity=new Vector2(movespeed,player.velocity.y);
+        if(CrossPlatformInputManager.GetButtonDown("Jump") ){
+            if(ground){
+                player.velocity=new Vector2(player.velocity.x,jumpForce);
+                //animator.SetBool("jump",true);
+            }
+            //  animator.SetBool("jump",false);            
         }
+
+
+        animator.SetFloat("speed",player.velocity.x);
+        animator.SetBool("jump",ground);
     }
+
 
 }
 
