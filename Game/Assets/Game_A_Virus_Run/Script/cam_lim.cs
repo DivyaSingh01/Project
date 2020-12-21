@@ -10,7 +10,7 @@ public class cam_lim : MonoBehaviour
     void Update()
     {
         transform.position=new Vector3(
-            Mathf.Clamp(player.position.x,1.2f,322f),
+            Mathf.Clamp(player.position.x,1.2f,340f),
             Mathf.Clamp(player.position.y,1.75f,1.3f),
             transform.position.z);
     }
